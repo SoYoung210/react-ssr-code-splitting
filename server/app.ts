@@ -10,7 +10,7 @@ app.get('/ping', (req, res) => {
   res.send('pong!@#');
 });
 
-app.get('/',  (req, res) => {
+app.get('*',  (req, res) => {
   res.render('index');
 });
 
