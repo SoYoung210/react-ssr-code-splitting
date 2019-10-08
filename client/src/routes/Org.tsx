@@ -1,31 +1,29 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { Card } from '@/component/Card';
-import { userGitHub, USER_PREFIX, UserGitHubState } from '@/store/github/user';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootStoreState } from '@/store/reducers';
 import { loadingState } from '@/store/_modules/loading';
 import { HttpStatusCode, SEARCH_TYPE } from '@/api';
+import { OrgGitHubState, orgGitHub, ORG_PREFIX } from '@/store/github/org';
+import { Card } from '@/component/Card';
 
-import './styles.pcss';
-
-export const User = () => {
+export const Org = () => {
   const fetchState = useSelector<RootStoreState, loadingState>(
     state => state.loading
   );
-  const { contents } = useSelector<RootStoreState, UserGitHubState>(
-    state => state.userGitHub,
+  const { contents } = useSelector<RootStoreState, OrgGitHubState>(
+    state => state.orgGitHub,
   );
   const dispatch = useDispatch();
   
   useEffect(() => {
-    dispatch(userGitHub.fetch({
-      targetName: 'SoYoung210',
-      userType: SEARCH_TYPE.USER
+    dispatch(orgGitHub.fetch({
+      targetName: 'facebook',
+      userType: SEARCH_TYPE.ORG
     }));
   }, [])
 
   const renderByFetchState = () => {
-    const status = fetchState[USER_PREFIX];
+    const status = fetchState[ORG_PREFIX];
 
     switch(status) {
       case HttpStatusCode.OK:
@@ -46,7 +44,7 @@ export const User = () => {
 
     return (
       <>
-        <h1>User: SoYoung210 페이지</h1>
+        <h1>Org: Facebook 페이지</h1>
         <Card
           imageUrl={avatar_url}
           type={type}
