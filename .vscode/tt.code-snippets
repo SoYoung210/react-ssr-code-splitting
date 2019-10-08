@@ -1,0 +1,17 @@
+{
+  "Scaffolding test structure": {
+    "prefix": "tt",
+    "body": [
+      "describe('$1', () => {",
+      " it('$2' ,() => {",
+      "   // Given",
+      "   const expected = $4",
+      "   // When",
+      "   const result = $3",
+      "   // Then",
+      "   expect(result).toEqual(expected)",
+      " });",
+      "});"
+    ]
+  },
+}
