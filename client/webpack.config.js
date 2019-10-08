@@ -14,7 +14,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env, options) => {
   const config = {
-    entry: ['@babel/polyfill', './src/index.tsx'],
+    entry: ['./src/index.tsx'],
     output: {
       filename: '[name].bundle.js',
       chunkFilename: '[name].bundle.js',
@@ -37,9 +37,6 @@ module.exports = (env, options) => {
         },
         {
           test: /\.p?css$/,
-          exclude: [
-            /node_modules/
-          ],
           use: [
             'style-loader',
             {
@@ -132,10 +129,10 @@ module.exports = (env, options) => {
     },
     resolve: {
       alias: {
-        '@/*': pathResolve('src/*')
+        '@': pathResolve('src')
       },
       modules: ['node_modules'],
-      extensions: ['.ts', '.tsx', '.js', '.json', '.less'],
+      extensions: ['.ts', '.tsx', '.js'],
     },
   };
 
