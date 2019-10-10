@@ -4,11 +4,11 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   target: 'node',
   name: 'server',
-  node: false, // it enables '__dirname' in files. If is not, '__dirname' always return '/'.
-  entry: './app.ts',
+  node: false,
+  entry: './server/app.ts',
   output: {
     filename: 'server.bundle.js',
-    path: pathResolve(__dirname, '../static'),
+    path: pathResolve(__dirname, './static'),
   },
   module: {
     rules: [
