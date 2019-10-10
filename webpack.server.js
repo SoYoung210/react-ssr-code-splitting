@@ -1,4 +1,5 @@
 const pathResolve = require('path').resolve;
+const babelConfig = require('./babelrc.server');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
@@ -16,7 +17,10 @@ module.exports = {
         test: /\.(ts|tsx|js)?$/,
         exclude: /node_modules/,
         use: [
-          'babel-loader',
+          {
+            loader: 'babel-loader',
+            options: babelConfig
+          }
         ],
       }
     ],
