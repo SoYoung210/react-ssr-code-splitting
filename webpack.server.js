@@ -6,7 +6,7 @@ module.exports = {
   target: 'node',
   name: 'server',
   node: false,
-  entry: './server/app.ts',
+  entry: './server/app.tsx',
   output: {
     filename: 'server.bundle.js',
     path: pathResolve(__dirname, './static'),
