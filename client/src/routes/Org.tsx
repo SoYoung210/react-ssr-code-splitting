@@ -6,7 +6,7 @@ import { HttpStatusCode, SEARCH_TYPE } from '@/api';
 import { OrgGitHubState, orgGitHub, ORG_PREFIX } from '@/store/github/org';
 import { Card } from '@/component/Card';
 
-export const Org = () => {
+export default () => {
   const fetchState = useSelector<RootStoreState, loadingState>(
     state => state.loading
   );
