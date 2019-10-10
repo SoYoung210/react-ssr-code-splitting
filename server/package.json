@@ -19,5 +19,9 @@
     "webpack-jarvis": "0.3.2",
     "webpack-node-externals": "^1.7.2",
     "webpack-stylish": "0.1.8"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^2.0.4"
   }
 }

@@ -8,7 +8,7 @@
     "build:client": "webpack --mode development --config ./client/webpack.config.js"
   },
   "dependencies": {
-    "express": "4.17.1",
-    "pug": "2.0.4"
+    "express": "^4.17.1",
+    "pug": "^2.0.4"
   }
 }
