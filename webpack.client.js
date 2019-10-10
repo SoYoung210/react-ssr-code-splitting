@@ -1,107 +1,148 @@
-const webpack = require('webpack');
-const LoadablePlugin = require('@loadable/webpack-plugin');
+const Jarvis = require('webpack-jarvis');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+const join = require('path').join;
 const pathResolve = require('path').resolve;
-const nodeExternals = require('webpack-node-externals');
-const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const moduleRules = require('./webpack.module');  
+const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const PRODUCTION = process.env.NODE_ENV ?
+  process.env.NODE_ENV.toLowerCase() === 'production' :
+  false;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const hotMiddlewareScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
-const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
-const getMode = () => (
-  IS_PRODUCTION ? 'production' : 'development'
-)
-
-const getOutputConfig = (name) => ({
-  filename: '[name].bundle.js',
-  chunkFilename: '[name].bundle.js',
-  path: pathResolve(__dirname, `static/${name}`),
-  publicPath: `/${name}/`,
-  libraryTarget: name === 'web' ? 'var' : 'commonjs2'
-});
-
-const getResolveConfig = () => ({
-  alias: {
-    '@': pathResolve('client/src')
-  },
-  modules: ['node_modules'],
-  extensions: ['.ts', '.tsx', '.js', '.json', '.less'],
-});
-
-const clientConfig = {
-  entry: [hotMiddlewareScript,'./client/src/index.tsx'],
-  target: 'web',
-  name: 'web',
-  mode: getMode(),
-  output: getOutputConfig('web'),
-  module: {
-    rules: moduleRules
-  },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'initial',
+module.exports = (env, options) => {
+  const config = {
+    entry: ['./client/src/index.tsx'],
+    output: {
+      filename: '[name].bundle.js',
+      chunkFilename: '[name].bundle.js',
+      path: join(__dirname, './static'),
+      publicPath: '/'
+    },
+    module: {
+      rules: [{
+          test: /\.(ts|tsx|js)?$/,
+          exclude: /node_modules/,
+          use: [{
+            loader: 'babel-loader',
+          }, ],
+        },
+        {
+          test: /\.(html)$/,
+          use: {
+            loader: 'html-loader',
+          },
+        },
+        {
+          test: /\.p?css$/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                modules: {
+                  localIdentName: '[name]__[local]--[hash:base64:5]',
+                },
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+          ],
+        },
+        {
+          test: /\.(gif|png|jpe?g)$/i,
+          use: ['file-loader'],
+        },
+        {
+          test: /\.svg$/,
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 10000, // 10kb
+            },
+          },
+        },
+      ],
+    },
+    optimization: {
+      minimize: true,
+      usedExports: true,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              ecma: 6,
+            },
+            compress: {
+              ecma: 6,
+              warnings: false,
+              comparisons: false,
+            },
+            mangle: {
+              safari10: true,
+            },
+            output: {
+              ecma: 6,
+              comments: false,
+              ascii_only: true,
+            },
+          },
+          parallel: true,
+          cache: true,
+          sourceMap: true,
+        }),
+        new OptimizeCSSPlugin({}),
+      ],
+      splitChunks: {
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
         },
       },
     },
-  },
-  plugins: [
-    new LoadablePlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new CompressionWebpackPlugin({
-      test: new RegExp(`\\.(${['js', 'ts', 'css', 'pcss', 'html'].join('|')})$`),
-      filename: '[path].gz[query]',
-      algorithm: 'gzip',
-      threshold: 8192,
-      cache: true,
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[name].css',
-    }),
-  ],
-  resolve: getResolveConfig(),
-};
-
-const nodeRenderConfig = {
-  target: 'node',
-  name: 'node',
-  entry: [pathResolve( './client/src/routes/index.tsx')],
-  output: getOutputConfig('node'),
-  mode: getMode(),
-  externals: ['@loadable/component', nodeExternals()],
-  module: {
-    rules: moduleRules
-  },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'initial',
-        },
-      },
+    plugins: [
+      new Jarvis({
+        port: 1337,
+      }),
+      new OptimizeCSSPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'app.bundle.css',
+        chunkFilename: '[id].css',
+      }),
+      new HtmlWebpackPlugin({
+        template: pathResolve(__dirname,'./server/views/index.pug'),
+        filename: './index.pug'
+      }),
+      new HtmlWebpackPugPlugin()
+    ],
+    devServer: {
+      compress: true,
+      port: 5252,
+      historyApiFallback: true,
     },
-  },
-  plugins: [
-    new LoadablePlugin(),
-    new CompressionWebpackPlugin({
-      test: new RegExp(`\\.(${['js', 'ts', 'css', 'pcss', 'html'].join('|')})$`),
-      filename: '[path].gz[query]',
-      algorithm: 'gzip',
-      threshold: 8192,
-      cache: true,
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[name].css',
-    }),
-  ],
-  resolve: getResolveConfig(),
-};
+    resolve: {
+      alias: {
+        '@': pathResolve('client/src')
+      },
+      modules: ['node_modules'],
+      extensions: ['.ts', '.tsx', '.js'],
+    },
+  };
 
-module.exports = [clientConfig, nodeRenderConfig]
+  if (options.mode === 'development') {
+    config.plugins.push(
+      new BundleAnalyzerPlugin({
+        openAnalyzer: PRODUCTION ? false : true,
+      })
+    );
+  }
+
+  return config;
+};
