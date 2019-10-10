@@ -8,7 +8,7 @@ import { HttpStatusCode, SEARCH_TYPE } from '@/api';
 
 import './styles.pcss';
 
-export const User = () => {
+export default () => {
   const fetchState = useSelector<RootStoreState, loadingState>(
     state => state.loading
   );
