@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run build:server && npm run build:client",
     "build:server": "webpack --mode development --config ./webpack.server.js",
-    "build:client": "cd client && webpack --mode development"
+    "build:client": "webpack --mode development --config ./webpack.client.js"
   },
   "devDependencies": {
     "@types/express": "^4.17.1",

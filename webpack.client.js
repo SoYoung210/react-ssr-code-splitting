@@ -14,11 +14,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env, options) => {
   const config = {
-    entry: ['./src/index.tsx'],
+    entry: ['./client/src/index.tsx'],
     output: {
       filename: '[name].bundle.js',
       chunkFilename: '[name].bundle.js',
-      path: join(__dirname, '../static'),
+      path: join(__dirname, './static'),
       publicPath: '/'
     },
     module: {
@@ -117,7 +117,7 @@ module.exports = (env, options) => {
         chunkFilename: '[id].css',
       }),
       new HtmlWebpackPlugin({
-        template: pathResolve(__dirname,'../server/views/index.pug'),
+        template: pathResolve(__dirname,'./server/views/index.pug'),
         filename: './index.pug'
       }),
       new HtmlWebpackPugPlugin()
@@ -129,7 +129,7 @@ module.exports = (env, options) => {
     },
     resolve: {
       alias: {
-        '@': pathResolve('src')
+        '@': pathResolve('client/src')
       },
       modules: ['node_modules'],
       extensions: ['.ts', '.tsx', '.js'],
