@@ -1,4 +1,5 @@
 const Jarvis = require('webpack-jarvis');
+const babelConfig = require('./babelrc.client');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 const join = require('path').join;
@@ -25,9 +26,12 @@ module.exports = (env, options) => {
       rules: [{
           test: /\.(ts|tsx|js)?$/,
           exclude: /node_modules/,
-          use: [{
-            loader: 'babel-loader',
-          }, ],
+          use: [
+            {
+              loader: 'babel-loader',
+              options: babelConfig
+            }
+          ],
         },
         {
           test: /\.(html)$/,
