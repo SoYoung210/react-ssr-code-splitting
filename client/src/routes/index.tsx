@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { User } from './User';
+import loadable from '@loadable/component';
 import { Provider } from 'react-redux';
 import store from '@/store/stores'
-import { Org } from './Org';
+
+const User = loadable(() => import(/* webpackChunkName: "user"*/ './User'))
+const Org = loadable(() => import(/* webpackChunkName: "org"*/ './Org'))
 
 const EntryRoute: React.FC = () => {
   return (
