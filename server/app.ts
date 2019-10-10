@@ -12,6 +12,11 @@ app.get('/ping', (req, res) => {
 });
 
 app.get('*',  (req, res) => {
+  // const html = renderToString(
+  //   <StaticRouter location={req.url} context={context}>
+  //     <App />
+  //   </StaticRouter>,
+  // );
   res.render('index');
 });
 
