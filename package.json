@@ -33,6 +33,7 @@
     "@types/react-redux": "7.1.1",
     "@types/react-router-dom": "4.3.4",
     "@types/redux-actions": "^2.6.1",
+    "@types/window-or-global": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "2.2.1-alpha.8",
     "@typescript-eslint/parser": "2.2.0",
     "autoprefixer": "9.6.0",
@@ -89,6 +90,7 @@
     "redux-actions": "2.6.5",
     "redux-observable": "1.1.0",
     "rxjs": "^6.5.3",
-    "typescript": "3.5.2"
+    "typescript": "3.5.2",
+    "window-or-global": "^1.0.1"
   }
 }
