@@ -12,6 +12,7 @@ const PRODUCTION = process.env.NODE_ENV ?
   process.env.NODE_ENV.toLowerCase() === 'production' :
   false;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const hotMiddlewareScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
 
 module.exports = (env, options) => {
   const config = {
