@@ -1,10 +1,29 @@
+import React from 'react';
 import express from 'express';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import EntryRoute from '../client/src/routes/index';
-
 const app = express();
+
+// if (process.env.NODE_ENV !== 'production') {
+//   const webpack = require('webpack');
+//   const webpackConfig = require('../webpack.client');
+
+//   const webpackDevMiddleware = require('webpack-dev-middleware');
+//   const webpackHotMiddleware = require('webpack-hot-middleware');
+
+//   const compiler = webpack(webpackConfig);
+
+//   app.use(
+//     webpackDevMiddleware(compiler, {
+//       logLevel: 'silent',
+//       publicPath: webpackConfig.output.publicPath,
+//     }),
+//   );
+
+//   app.use(webpackHotMiddleware(compiler));
+// }
 
 app.set('views', path.join(__dirname, '../static'));
 app.set('view engine', 'pug');
