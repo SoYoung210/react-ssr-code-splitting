@@ -9,7 +9,7 @@ module.exports = {
   entry: './server/app.tsx',
   output: {
     filename: 'server.bundle.js',
-    path: pathResolve(__dirname, './static'),
+    path: pathResolve(__dirname, 'static'),
   },
   module: {
     rules: [
@@ -24,6 +24,12 @@ module.exports = {
         ],
       }
     ],
+  },
+  resolve: {
+    alias: {
+      '@': pathResolve('client/src'),
+    },
+    extensions: ['.ts', '.tsx', '.js']
   },
   externals: [nodeExternals()]
 };
