@@ -17,6 +17,7 @@ module.exports = {
         "style": true
       }
     ],
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    '@loadable/babel-plugin'
   ]
 }
