@@ -9,12 +9,10 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpack from 'webpack';
 import webpackConfig from '../webpack.client.js';
-// import EntryRoute from '../client/src/routes/index';
+
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
-  console.log('@@ webpackConfig @@', webpackConfig);
-
   const compiler = webpack(webpackConfig);
 
   app.use(
@@ -66,7 +64,6 @@ app.get('*',  (req, res) => {
         </body>
       </html>
   `);
-  // res.render('index');
 });
 
 // 404 Handler
