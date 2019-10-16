@@ -20,7 +20,7 @@ export const createAsyncAction = <T>(type: string) =>  {
     FETCH,
     SUCCESS,
     FAILURE,
-    fetch: createAction<T>(FETCH),
+    fetch: (t?: T) => createAction<T>(FETCH)(t),
     success: createAction(SUCCESS),
     failure: createAction(FAILURE),
   }
