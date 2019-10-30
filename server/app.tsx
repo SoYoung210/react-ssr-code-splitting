@@ -1,32 +1,33 @@
 import React from 'react';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 import express from 'express';
 import path from 'path';
 import { ChunkExtractor } from '@loadable/server';
-const pathResolve = require('path').resolve;
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpack from 'webpack';
-import webpackConfig from '../webpack.client.js';
+
+
+import webpackConfig from '../webpack.client.js/index.js';
+import { renderFullPage } from './html';
 
 const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
   const compiler = webpack(webpackConfig);
+  const clientConfig = webpackConfig[0];
 
   app.use(
     webpackDevMiddleware(compiler, {
       logLevel: 'silent',
-      publicPath: webpackConfig[0].output.publicPath,
+      publicPath: clientConfig.output.publicPath,
     }),
   );
 
   app.use(webpackHotMiddleware(compiler));
 }
 
-app.set('views', path.join(__dirname, '../static'));
-app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, '../static')));
 
 app.get('/ping', (req, res) => {
@@ -34,8 +35,8 @@ app.get('/ping', (req, res) => {
 });
 
 app.get('*',  (req, res) => {
-  const nodeStats = pathResolve(__dirname, './node/loadable-stats.json');
-  const webStats = pathResolve(__dirname, './web/loadable-stats.json');
+  const nodeStats = path.resolve(__dirname, './node/loadable-stats.json');
+  const webStats = path.resolve(__dirname, './web/loadable-stats.json');
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
   const { default: EntryRoute } = nodeExtractor.requireEntrypoint();
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
@@ -48,28 +49,7 @@ app.get('*',  (req, res) => {
   const html = renderToString(tsx);
 
   res.set('content-type', 'text/html');
-  res.send(`
-    <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta name="viewport" content="width=device-width, user-scalable=no">
-          <meta name="google" content="notranslate">
-          <title>soso template server</title>
-          ${webExtractor.getLinkTags()}
-          ${webExtractor.getStyleTags()}
-        </head>
-        <body>
-          <div id="root">${html}</div>
-          ${webExtractor.getScriptTags()}
-        </body>
-      </html>
-  `);
-});
-
-// 404 Handler
-app.use((req, res, next) => {
-  res.status(404);
-  res.redirect('/errors/page-not-found');
+  res.send(renderFullPage(webExtractor, html));
 });
 
 app.listen(5252, () => {
