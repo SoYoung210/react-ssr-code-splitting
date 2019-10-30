@@ -1,4 +1,6 @@
-import { ajax } from 'rxjs/ajax';
+import axios from 'axios';
+import { from } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export enum HttpStatusCode {
   LOADING = 0,
@@ -19,12 +21,21 @@ export interface GitHubSearchConfig {
   targetName: string;
   userType: SEARCH_TYPE
 }
+const requestGET = (url: string) =>
+  from(axios.get(url)).pipe(
+    map(response => {
+      console.log('@@ resp @@', response)
+      return response.data}),
 
-export function getGitHubProfile(requestPayload: GitHubSearchConfig) {
+    catchError(err => err)
+  );
+  
+export function getGitHubProfile (requestPayload: GitHubSearchConfig) {
   const { targetName, userType } = requestPayload;
   const baseUrl = `https://api.github.com/search/users?q=${targetName}`;
   let targetUrl;
 
+  console.log('@@ targetUrl @@', targetUrl)
   switch (userType) {
     case SEARCH_TYPE.ORG:
       targetUrl = baseUrl.concat('+type%3Aorg&type=Users');
@@ -37,7 +48,6 @@ export function getGitHubProfile(requestPayload: GitHubSearchConfig) {
       break;
   }
   console.log('t',targetUrl);
-  const response = ajax.getJSON(targetUrl);
-  
-  return response
+
+  return requestGET(targetUrl).pipe(map(res => res));
 }
