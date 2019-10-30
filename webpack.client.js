@@ -63,7 +63,7 @@ const clientConfig = {
 const nodeRenderConfig = {
   target: 'node',
   name: 'node',
-  entry: [pathResolve(__dirname, './client/src/routes/index.tsx')],
+  entry: [pathResolve( './client/src/routes/index.tsx')],
   output: getOutputConfig('node'),
   externals: ['@loadable/component', nodeExternals()],
   module: {

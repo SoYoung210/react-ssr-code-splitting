@@ -9,7 +9,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 
 
-import webpackConfig from '../webpack.client.js/index.js';
+import webpackConfig from '../webpack.client.js';
 import { renderFullPage } from './html';
 
 const app = express();
