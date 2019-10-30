@@ -1,86 +1,35 @@
-const babelConfig = require('./babelrc.client');
+const webpack = require('webpack');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const pathResolve = require('path').resolve;
-const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const PRODUCTION = process.env.NODE_ENV ?
-  process.env.NODE_ENV.toLowerCase() === 'production' :
-  false;
+const moduleRules = require('./webpack.module');  
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const hotMiddlewareScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
 
-const getEntryPoint = (target) => {
-  if (target === 'node') {
-    return ['./client/src/routes/index.tsx']
-  } else {
-    return  [hotMiddlewareScript, './client/src/index.tsx']
-  }
-}
+const getOutputConfig = (name) => ({
+  filename: '[name].bundle.js',
+  chunkFilename: '[name].bundle.js',
+  path: pathResolve(__dirname, `static/${name}`),
+  publicPath: `/${name}/`,
+  libraryTarget: name === 'web' ? 'var' : 'commonjs2'
+});
 
-const getConfig = (target) => ({
-  entry: getEntryPoint(target),
-  target,
-  name: target,
-  output: {
-    filename: '[name].bundle.js',
-    chunkFilename: '[name].bundle.js',
-    path: pathResolve(__dirname, `./static/${target}`),
-    publicPath: `/${target}/`,
-    libraryTarget: target === 'node' ?  'commonjs2' : undefined
+const getResolveConfig = () => ({
+  alias: {
+    '@': pathResolve('client/src')
   },
-  externals: target === 'node' ?
-    ['@loadable/component', nodeExternals()]
-    : undefined,
+  modules: ['node_modules'],
+  extensions: ['.ts', '.tsx', '.js', '.json', '.less'],
+});
+
+const clientConfig = {
+  entry: [hotMiddlewareScript,'./client/src/index.tsx'],
+  target: 'web',
+  name: 'web',
+  output: getOutputConfig('web'),
   module: {
-    rules: [
-      {
-        test: /\.(ts|tsx|js)?$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: babelConfig
-          }
-        ],
-      },
-      {
-        test: /\.(html)$/,
-        use: {
-          loader: 'html-loader',
-        },
-      },
-      {
-        test: /\.p?css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: {
-                localIdentName: '[name]_[hash:base64:5]',
-              },
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true,
-            }
-          },
-        ],
-      },
-      {
-        test: /\.svg$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-          },
-        },
-      },
-    ],
+    rules: moduleRules
   },
   optimization: {
     splitChunks: {
@@ -106,25 +55,46 @@ const getConfig = (target) => ({
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].css',
-    })
+    }),
   ],
-  resolve: {
-    alias: {
-      '@': pathResolve('client/src')
-    },
-    modules: ['node_modules'],
-    extensions: ['.ts', '.tsx', '.js'],
+  resolve: getResolveConfig(),
+};
+
+const nodeRenderConfig = {
+  target: 'node',
+  name: 'node',
+  entry: [pathResolve(__dirname, './client/src/routes/index.tsx')],
+  output: getOutputConfig('node'),
+  externals: ['@loadable/component', nodeExternals()],
+  module: {
+    rules: moduleRules
   },
-})
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'initial',
+        },
+      },
+    },
+  },
+  plugins: [
+    new LoadablePlugin(),
+    new CompressionWebpackPlugin({
+      test: new RegExp(`\\.(${['js', 'ts', 'css', 'pcss', 'html'].join('|')})$`),
+      filename: '[path].gz[query]',
+      algorithm: 'gzip',
+      threshold: 8192,
+      cache: true,
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[name].css',
+    }),
+  ],
+  resolve: getResolveConfig(),
+};
 
-const getWebConfig = () => {
-  const webConfig = getConfig('web');
-
-  return webConfig;
-}
-
-const webpackNodeConfig = getConfig('node');
-const webpackClientConfig = getWebConfig();
-
-
-module.exports = [webpackClientConfig, webpackNodeConfig]
+module.exports = [clientConfig, nodeRenderConfig]

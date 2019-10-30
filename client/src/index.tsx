@@ -9,11 +9,9 @@ import { BrowserRouter } from 'react-router-dom';
 loadableReady(() => {
   const root = document.getElementById('root');
   hydrate(
-   
-      <BrowserRouter>
-        <EntryRoute />
-      </BrowserRouter>
-    ,
+    <BrowserRouter>
+      <EntryRoute />
+    </BrowserRouter>,
     root
   );
 });
