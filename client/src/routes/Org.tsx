@@ -38,6 +38,9 @@ export default () => {
     }
   }
 
+  const Header = () => {
+    return <h1>Org: Facebook 페이지</h1>
+  }
   const renderContent = () => {
     const {
       login,
@@ -47,7 +50,6 @@ export default () => {
 
     return (
       <>
-        <h1>Org: Facebook 페이지</h1>
         <Card
           imageUrl={avatar_url}
           type={type}
@@ -58,5 +60,10 @@ export default () => {
     );
   };
 
-  return renderByFetchState();
+  return (
+    <>
+      <Header />
+      { renderByFetchState() }
+    </>
+  )
 }
