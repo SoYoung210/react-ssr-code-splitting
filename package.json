@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run build:server && npm run build:client && node ./static/server.bundle.js",
-    "build:server": "webpack --mode development --config ./webpack.server.js",
-    "build:client": "webpack --mode development --config ./webpack.client.js"
+    "build:server": "webpack --mode=production --config ./webpack.server.js",
+    "build:client": "webpack --mode=production --config ./webpack.client.js"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
