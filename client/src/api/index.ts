@@ -24,8 +24,8 @@ export interface GitHubSearchConfig {
 const requestGET = (url: string) =>
   from(axios.get(url)).pipe(
     map(response => {
-      console.log('@@ resp @@', response)
-      return response.data}),
+      return response.data
+    }),
 
     catchError(err => err)
   );
@@ -35,7 +35,6 @@ export function getGitHubProfile (requestPayload: GitHubSearchConfig) {
   const baseUrl = `https://api.github.com/search/users?q=${targetName}`;
   let targetUrl;
 
-  console.log('@@ targetUrl @@', targetUrl)
   switch (userType) {
     case SEARCH_TYPE.ORG:
       targetUrl = baseUrl.concat('+type%3Aorg&type=Users');
@@ -47,7 +46,6 @@ export function getGitHubProfile (requestPayload: GitHubSearchConfig) {
       targetUrl = baseUrl;
       break;
   }
-  console.log('t',targetUrl);
 
   return requestGET(targetUrl).pipe(map(res => res));
 }
