@@ -1,19 +1,24 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import loadable from '@loadable/component';
-import { Provider } from 'react-redux';
-import store from '@/store/stores';
+import { routes, RouteBranch } from './controller';
 
-const User = loadable(() => import(/* webpackChunkName: "user"*/ './User'), {ssr: false})
-const Org = loadable(() => import(/* webpackChunkName: "org"*/ './Org'))
+export default () => (
+  <Switch>
+    {
+      routes.map((route, i) => (
+        <RenderWithSubRoute key={ i } { ...route } />
+      ))
+    }
+  </Switch>
+);
 
-export default () => {
+const RenderWithSubRoute = (route: RouteBranch) => {
   return (
-    <Provider store={ store }>
-      <Switch>
-        <Route path='/user' component={User} />
-        <Route path='/org' component={Org} />
-      </Switch>
-    </Provider>
+    <Route 
+      path={ route.path }
+      render={ props => (
+        <route.component { ...props } routes={ route.routes } />
+      ) }
+    />
   );
-}
+};
