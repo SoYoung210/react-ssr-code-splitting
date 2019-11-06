@@ -3,7 +3,7 @@ const LoadablePlugin = require('@loadable/webpack-plugin');
 const pathResolve = require('path').resolve;
 const nodeExternals = require('webpack-node-externals');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const moduleRules = require('./webpack.module');  
+const moduleRules = require('./webpack.module');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const hotMiddlewareScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'

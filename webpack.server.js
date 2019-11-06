@@ -1,7 +1,6 @@
 const pathResolve = require('path').resolve;
 const babelConfig = require('./babelrc.server');
 const nodeExternals = require('webpack-node-externals');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   target: 'node',
@@ -24,32 +23,9 @@ module.exports = {
           }
         ],
       },
-      {
-        test: /\.p?css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: {
-                localIdentName: '[name]__[local]--[hash:base64:5]',
-              },
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-        ],
-      },
+
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[name].css',
-    }),
-  ],
   resolve: {
     alias: {
       '@': pathResolve('client/src'),
