@@ -4,7 +4,7 @@ const pathResolve = require('path').resolve;
 const nodeExternals = require('webpack-node-externals');
 const hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const moduleRules = require('./webpack.module');  
+const moduleRules = require('./webpack.module');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const getOutputConfig = (name) => ({
