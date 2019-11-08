@@ -23,10 +23,7 @@ export interface GitHubSearchConfig {
 }
 const requestGET = (url: string) =>
   from(axios.get(url)).pipe(
-    map(response => {
-      console.log('@@ resp @@', response)
-      return response.data}),
-
+    map(response => response.data),
     catchError(err => err)
   );
   
