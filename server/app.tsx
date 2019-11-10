@@ -33,7 +33,7 @@ app.get('/ping', (req, res) => {
   res.send('pong!@#');
 });
 
-const handleRender = async (req, res) => {
+const handleRender = (req, res) => {
   try {
     const appStore = getStore();
    
