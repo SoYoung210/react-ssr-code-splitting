@@ -13,17 +13,6 @@ export default () => {
   const { contents } = useSelector<RootStoreState, OrgGitHubState>(
     state => state.orgGitHub,
   );
-  
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (typeof window !== `undefined`) {
-      dispatch(orgGitHub.fetch({
-        targetName: 'facebook',
-        userType: SEARCH_TYPE.ORG
-      }));
-    }
-  }, [])
 
   const renderByFetchState = () => {
     const status = fetchState[ORG_PREFIX];
@@ -41,6 +30,7 @@ export default () => {
   const Header = () => {
     return <h1>Org: Facebook 페이지</h1>
   }
+
   const renderContent = () => {
     const {
       login,

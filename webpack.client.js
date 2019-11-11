@@ -2,15 +2,10 @@ const webpack = require('webpack');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const pathResolve = require('path').resolve;
 const nodeExternals = require('webpack-node-externals');
+const hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const moduleRules = require('./webpack.module');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const hotMiddlewareScript = `webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true`;
-const IS_PRODUCTION = process.env.NODE_ENV === 'production'
-
-const getMode = () => (
-  IS_PRODUCTION ? 'production' : 'development'
-)
 
 const getOutputConfig = (name) => ({
   filename: '[name].bundle.js',
@@ -32,7 +27,6 @@ const clientConfig = {
   entry: [hotMiddlewareScript,'./client/src/index.tsx'],
   target: 'web',
   name: 'web',
-  mode: getMode(),
   output: getOutputConfig('web'),
   module: {
     rules: moduleRules
@@ -69,9 +63,8 @@ const clientConfig = {
 const nodeRenderConfig = {
   target: 'node',
   name: 'node',
-  entry: [pathResolve( './client/src/routes/index.tsx')],
+  entry: [pathResolve(__dirname, './client/src/routes/index.tsx')],
   output: getOutputConfig('node'),
-  mode: getMode(),
   externals: ['@loadable/component', nodeExternals()],
   module: {
     rules: moduleRules
