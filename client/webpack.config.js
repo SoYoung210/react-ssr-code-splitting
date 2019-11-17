@@ -5,6 +5,7 @@ const join = require('path').join;
 const pathResolve = require('path').resolve;
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const PRODUCTION = process.env.NODE_ENV ?
   process.env.NODE_ENV.toLowerCase() === 'production' :
@@ -120,6 +121,7 @@ module.exports = (env, options) => {
         template: pathResolve(__dirname,'../server/views/index.pug'),
         filename: './index.pug'
       }),
+      new HtmlWebpackPugPlugin()
     ],
     devServer: {
       compress: true,
