@@ -4,7 +4,8 @@
   "author": "SoYoung210",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack --mode development"
+    "dev": "webpack --mode development",
+    "start": "npm run dev && node server.bundle.js"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
