@@ -1,12 +1,12 @@
 module.exports = {
   "presets": [
+    "@babel/typescript",
+    "@babel/react",
     ["@babel/env", {
       "targets": {
-        "node": 6
+        "node": "current"
       }
     }],
-    "@babel/typescript",
-    "@babel/react"
   ],
   "plugins": [
     "@babel/proposal-class-properties",
