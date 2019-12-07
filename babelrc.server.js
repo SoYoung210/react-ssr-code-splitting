@@ -3,7 +3,7 @@ module.exports = {
     "@babel/typescript",
     "@babel/react"
   ],
-  "plugins": [	
-    '@loadable/babel-plugin'	
+  "plugins": [
+    '@loadable/babel-plugin'
   ]
 }
