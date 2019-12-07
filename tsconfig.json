@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "target": "es5",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "keyofStringsOnly": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2015",
+      "scripthost",
+      "dom"
+    ],
+    "jsx": "react",
+    "paths": {
+      "@/*": ["client/src/*"]
+    },
+    "declaration": false,
+    "sourceMap": true,
+    "removeComments": true,
+    "noImplicitAny": false,
+    "noStrictGenericChecks": true,
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "exclude": [
+    ".vscode",
+    "node_modules/**",
+    "static"
+  ]
+}

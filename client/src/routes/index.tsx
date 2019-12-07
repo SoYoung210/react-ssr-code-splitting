@@ -4,20 +4,16 @@ import loadable from '@loadable/component';
 import { Provider } from 'react-redux';
 import store from '@/store/stores'
 
-const User = loadable(() => import(/* webpackChunkName: "user"*/ './User'))
+const User = loadable(() => import(/* webpackChunkName: "user"*/ './User'), {ssr: false})
 const Org = loadable(() => import(/* webpackChunkName: "org"*/ './Org'))
 
-const EntryRoute: React.FC = () => {
+export default () => {
   return (
-    <BrowserRouter>
-      <Provider store={store}>
-        <Switch>
-          <Route path='/user' component={User} />
-          <Route path='/org' component={Org} />
-        </Switch>
-      </Provider>
-    </BrowserRouter>
+    <Provider store={ store }>
+      <Switch>
+        <Route path='/user' component={User} />
+        <Route path='/org' component={Org} />
+      </Switch>
+    </Provider>
   );
 }
-
-export default EntryRoute;
